@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Place } from './place.model';
 import { AuthService } from '../auth/auth.service';
 import { BehaviorSubject } from 'rxjs';
-import { take, filter, map } from 'rxjs/operators';
+import { take, filter, map, tap, delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class PlacesService {
         149.99,
         new Date('2019-01-01'),
         new Date('2019-12-31'),
-        'abc'
+        'xyz'
       ),
       new Place(
         'p2',
@@ -42,7 +42,7 @@ export class PlacesService {
         'abc'
       )
     ]
-  ) ;
+  );
 
   get places() {
     return this._places.asObservable();
@@ -52,7 +52,7 @@ export class PlacesService {
 
   getPlace(id: string) {
     return this.places.pipe(take(1), map(placesLocalVar => {
-      return {...placesLocalVar.find( p => p.id === id)};
+      return { ...placesLocalVar.find(p => p.id === id) };
     }));
     //
   }
@@ -64,13 +64,42 @@ export class PlacesService {
       title,
       description,
       'https://upload.wikimedia.org/wikipedia/commons/0/01/San_Francisco_with_two_bridges_and_the_fog.jpg',
-      price, dateFrom, dateTo, this.authService.userId );
+      price, dateFrom, dateTo, this.authService.userId);
 
-      this.places.pipe(take(1)).subscribe(placesLocalVar => {
+    return this.places.pipe(
+      take(1),
+      delay(1000), 
+      tap(placesLocalVar => {
         this._places.next(placesLocalVar.concat(newPlace));
-      });
-      
+      })
+    );
 
+  }
+
+  updateOffer(placeId: string, title: string, description: string) {
+    return this.places.pipe(
+      take(1),
+      delay(1000),
+      tap( places =>{
+        const updatedPlaceIndex = places.findIndex( pl => pl.id === placeId);
+        const updatedPlaces = [...places];
+        const oldPlace = updatedPlaces[updatedPlaceIndex];
+
+        updatedPlaces[updatedPlaceIndex] = new Place (
+          oldPlace.id, 
+          title, 
+          description, 
+          oldPlace.imageUrl, 
+          oldPlace.price, 
+          oldPlace.availableFrom, 
+          oldPlace.availableTo, 
+          oldPlace.userId
+        );
+
+        this._places.next(updatedPlaces);
+
+      })
+    );
   }
 
 }

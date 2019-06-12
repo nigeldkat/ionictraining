@@ -10,10 +10,11 @@ export class OfferItemComponent implements OnInit {
   @Input() offer: Place;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
 
-  getDummyDate() {
-    return new Date();
+    console.log(this.offer);
   }
+
+ 
 
 }

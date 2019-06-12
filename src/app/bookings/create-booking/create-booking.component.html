@@ -61,7 +61,7 @@
               display-format="MMM DD YYYY"
               picker-format="YY MMM DD"
               [min]="selectedPlace.availableFrom.toISOString()"
-              [max]="selectedPlace.availaleTo.toISOString()"
+              [max]="selectedPlace.availableTo.toISOString()"
               [ngModel]="startDate"
               name="date-from"
               required
@@ -80,7 +80,7 @@
               display-format="MMM DD YYYY"
               picker-format="YY MMM DD"
               [min]="startDateCtrl.value"
-              [max]="selectedPlace.availaleTo.toISOString()"
+              [max]="selectedPlace.availableTo.toISOString()"
               [ngModel]="endDate"
               name="date-to"
               required
