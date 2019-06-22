@@ -3,7 +3,7 @@ import { BookingService } from './booking.service';
 import { Booking } from './booking.model';
 import { IonItemSliding, LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { emitKeypressEvents } from 'readline';
+//import { emitKeypressEvents } from 'readline';
 
 @Component({
   selector: 'app-bookings',

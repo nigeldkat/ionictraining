@@ -15,6 +15,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   loadedPlaces: Place[];
   listedLoadedPlaces: Place[];
   relevantPlaces: Place[];
+  isLoading: boolean = false;
   private placeSub: Subscription;
   private chosenFilter: string = 'all';
 
@@ -42,6 +43,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   }
 
+  ionViewWillEnter(){
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(
+      ( ) => {
+        this.isLoading = false;
+      }
+    );
+  }
   ngOnDestroy() {
     if (this.placeSub) {
       this.placeSub.unsubscribe();
