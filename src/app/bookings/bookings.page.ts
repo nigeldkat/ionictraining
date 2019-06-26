@@ -12,18 +12,26 @@ import { Subscription } from 'rxjs';
 })
 export class BookingsPage implements OnInit, OnDestroy {
   loadedBookings: Booking[];
+  isLoading: boolean = false;
   private bookingSub: Subscription;
-  
+
   constructor(private bookingService: BookingService, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
-    this.bookingSub = this.bookingService.bookings.subscribe((bookings)=>{
+    this.bookingSub = this.bookingService.bookings.subscribe((bookings) => {
       this.loadedBookings = bookings;
     });
   }
 
-  ngOnDestroy(){
-    if(this.bookingSub){
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.bookingService.fetchBookings().subscribe( () => {
+      this.isLoading = false;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.bookingSub) {
       this.bookingSub.unsubscribe();
     }
   }
@@ -31,14 +39,14 @@ export class BookingsPage implements OnInit, OnDestroy {
   onCancelBooking(bookingId: string, slidingEl: IonItemSliding) {
     slidingEl.close();
 
-    this.loadingCtrl.create({message: 'Deleting Booking'}).then (el => {
+    this.loadingCtrl.create({ message: 'Deleting Booking' }).then(el => {
       el.present();
-      this.bookingService.cancelBooking(bookingId).subscribe( () => {
+      this.bookingService.cancelBooking(bookingId).subscribe(() => {
         el.dismiss();
       });
     });
 
-    
+
   }
 
 }
